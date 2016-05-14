@@ -35,8 +35,7 @@ int main(int argc, char **argv) {
 	
 	cdbc = cdbc_init();
 	
-	if (cdbc_connect(cdbc, "FreeTDS", "TDS_VERSION=7.0", "192.168.0.10", 1433,
-				 "username", "password"))
+	if (cdbc_connect(cdbc, "FreeTDS", "TDS_VERSION=7.0", "192.168.0.10", 1433, "username", "password"))
 	{
 		printf("connection failed: %s\n", cdbc_error(cdbc));
 		return 0;

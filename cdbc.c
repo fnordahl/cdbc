@@ -46,7 +46,7 @@ struct _CDBC_QUERY {
 	SQLHSTMT	hstmt;
 	SQLCHAR		query[1024];
 	SQLINTEGER	query_len;
-	int			is_error;
+	int		is_error;
 	
 	/* Resultset private data */
 	char		*row_buf;
@@ -105,11 +105,10 @@ char *_cdbc_get_error(char *errstr, SQLSMALLINT h_type, SQLHANDLE handle) {
 	
 	i = 1;
 	while (errstr_len < ((SQL_MAX_MESSAGE_LENGTH*2)-1) &&
-		   (rc = SQLGetDiagRec(h_type, handle, i, sqlstate, &native_err,
-							   msg, sizeof(msg), &msg_len)) != SQL_NO_DATA)
+		(rc = SQLGetDiagRec(h_type, handle, i, sqlstate, &native_err, msg, sizeof(msg), &msg_len)) != SQL_NO_DATA)
 	{
 		errstr_len += snprintf(errstr+errstr_len, (SQL_MAX_MESSAGE_LENGTH*2)-errstr_len,
-							   "sqlstate='%.*s' native=%ld msg='%.*s'", sizeof(sqlstate), sqlstate,
+							  "sqlstate='%.*s' native=%ld msg='%.*s'", sizeof(sqlstate), sqlstate,
 							   native_err, msg_len, msg);
 		i++;
 	}
@@ -180,9 +179,9 @@ int cdbc_connect(CDBC cdbc, char *driver, char *driver_opt, char *server, int po
 
 	*dsn_in = '\0';
 	snprintf((char*)dsn_in, sizeof(dsn_in), "DRIVER=%s;%s;SERVER=%s;PORT=%d;UID=%s;PWD=%s",
-			 driver, driver_opt, server, port, uid, pwd);
+		 driver, driver_opt, server, port, uid, pwd);
 	rc = SQLDriverConnect(cdbc->hdbc, NULL, dsn_in, strlen((char*)dsn_in),
-						  dsn_out, sizeof(dsn_out), &dsn_len, SQL_DRIVER_NOPROMPT);
+			      dsn_out, sizeof(dsn_out), &dsn_len, SQL_DRIVER_NOPROMPT);
 	
 	if (!SQL_SUCCEEDED(rc)) {
 		return -1;
@@ -241,7 +240,7 @@ int _cdbc_res_init(CDBC_QUERY q) {
 	sum_disp_size = 0;
 	for (i = 0; i < q->col_count; i++) {
 		rc = SQLDescribeCol(q->hstmt, i+1, col_name, sizeof(col_name), &col_name_len, &col_type,
-							&col_size, &col_scale, &col_nullable);
+				    &col_size, &col_scale, &col_nullable);
 		if (!SQL_SUCCEEDED(rc)) {
 			q->is_error = 1;
 			return -1;
