@@ -31,31 +31,32 @@ int main(int argc, char **argv) {
 	CDBC_QUERY q;
 	CDBC_RESULT res;
 	int count = 0;
-	char *name;
+	char *user, *host;
 	
 	cdbc = cdbc_init();
 	
-	if (cdbc_connect(cdbc, "FreeTDS", "TDS_VERSION=7.0", "192.168.0.10", 1433, "username", "password"))
+	if (cdbc_connect(cdbc, "MySQL", "DATABASE=mysql", "127.0.0.1", 3306, "root", ""))
 	{
 		printf("connection failed: %s\n", cdbc_error(cdbc));
 		cdbc_cleanup(cdbc);
-		return 0;
+		return 1;
 	}
 
 	q = NULL;
-	q = cdbc_prepare(cdbc, "SELECT 'test' as test");
+	q = cdbc_prepare(cdbc, "SELECT * FROM user");
 	
 	printf("Resultset has %d columns\n", cdbc_c_count(q));
 	if (cdbc_execute(q)) {
 		printf("query failed: %s\n", cdbc_query_error(q));
 		cdbc_cleanup(cdbc);
-		return 0;
+		return 1;
 	}
 
-	name = cdbc_c_name(q, "test");
+	user = cdbc_c_name(q, "User");
+	host = cdbc_c_name(q, "Host");
 	res = cdbc_fetch(q);
 	while (res) {
-		printf("%s\n", name);
+		printf("%s\t%s\n", user, host);
 		count++;
 		res = cdbc_fetch(q);
 	}
