@@ -360,7 +360,7 @@ CDBC_QUERY cdbc_prepare(CDBC cdbc, char* query) {
 	q->hstmt = SQL_NULL_HSTMT;
 	
 	*q->query = '\0';
-	strncat((char*)q->query, query, sizeof(q->query));
+	strncat((char*)q->query, query, sizeof(q->query)-1);
 	q->query_len = strlen((char*)q->query);
 	
 	q->is_error = 0;
