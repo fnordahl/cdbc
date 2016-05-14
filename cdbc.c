@@ -141,7 +141,7 @@ CDBC cdbc_init() {
 		goto error;
 	
 	/* Set ODBC version */
-	int32_t value = SQL_OV_ODBC3;
+	int64_t value = SQL_OV_ODBC3;
 	rc = SQLSetEnvAttr(cdbc->henv, SQL_ATTR_ODBC_VERSION, (SQLPOINTER)value, 0);
 	if (!SQL_SUCCEEDED(rc))
 		goto error;
