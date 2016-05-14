@@ -38,6 +38,7 @@ int main(int argc, char **argv) {
 	if (cdbc_connect(cdbc, "FreeTDS", "TDS_VERSION=7.0", "192.168.0.10", 1433, "username", "password"))
 	{
 		printf("connection failed: %s\n", cdbc_error(cdbc));
+		cdbc_cleanup(cdbc);
 		return 0;
 	}
 
@@ -47,6 +48,7 @@ int main(int argc, char **argv) {
 	printf("Resultset has %d columns\n", cdbc_c_count(q));
 	if (cdbc_execute(q)) {
 		printf("query failed: %s\n", cdbc_query_error(q));
+		cdbc_cleanup(cdbc);
 		return 0;
 	}
 
