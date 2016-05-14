@@ -1,5 +1,5 @@
-CFLAGS=-O2 -g
-LDFLAGS=-liodbc
+CFLAGS+=-O2 -g
+LDFLAGS+=-liodbc
 LIBDIR?=/usr/lib
 
 all: libcdbc
