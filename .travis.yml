@@ -1,6 +1,6 @@
 language: C
 install:
-  - sudo apt-get -y install libltdl7 libmyodbc libmysqlclient18 libodbc1 mysql-common odbcinst odbcinst1debian2 unixodbc-dev
+  - sudo apt-get -y install libmyodbc unixodbc-dev
   - sudo odbcinst -i -d -f /usr/share/libmyodbc/odbcinst.ini
 env:
   - CFLAGS=-I/usr/include/unixodbc
