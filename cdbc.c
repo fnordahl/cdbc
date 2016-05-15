@@ -20,6 +20,7 @@
  */
 
 #include <assert.h>
+#include <limits.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -96,7 +97,7 @@ SQLSMALLINT CDBC_C_INTERVAL_HOUR_TO_SECOND = SQL_C_INTERVAL_HOUR_TO_SECOND;
 SQLSMALLINT CDBC_C_INTERVAL_MINUTE_TO_SECOND = SQL_C_INTERVAL_MINUTE_TO_SECOND;
 
 char *_cdbc_get_error(char *errstr, SQLSMALLINT h_type, SQLHANDLE handle) {
-	int errstr_len = 0;
+	int errstr_len = 0, msg_len_int;
 	SQLCHAR sqlstate[6], msg[SQL_MAX_MESSAGE_LENGTH];
 	SQLINTEGER native_err;
 	SQLSMALLINT i, msg_len;
@@ -108,9 +109,14 @@ char *_cdbc_get_error(char *errstr, SQLSMALLINT h_type, SQLHANDLE handle) {
 	while (errstr_len < ((SQL_MAX_MESSAGE_LENGTH*2)-1) &&
 		(rc = SQLGetDiagRec(h_type, handle, i, sqlstate, &native_err, msg, sizeof(msg), &msg_len)) != SQL_NO_DATA)
 	{
+		if (msg_len <= INT_MAX)
+			msg_len_int = (int) msg_len;
+		else
+			msg_len_int = INT_MAX;
+
 		errstr_len += snprintf(errstr+errstr_len, (SQL_MAX_MESSAGE_LENGTH*2)-errstr_len,
 							  "sqlstate='%.*s' native=%d msg='%.*s'", sizeof(sqlstate), sqlstate,
-							   native_err, msg_len, msg);
+							   native_err, msg_len_int, msg);
 		i++;
 	}
 	
