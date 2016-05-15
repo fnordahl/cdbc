@@ -11,16 +11,22 @@ CDBC is a C library providing simple and easy to use interfaces to the ODBC API
         CDBC_QUERY q;
         CDBC_RESULT res;
         char *row_value;
+        int id;
         
         // initialize CDBC and connect
         cdbc = cdbc_init();
         cdbc_connect(cdbc, "MySQL", "DATABASE=mydb", "127.0.0.1", 3306, "username", "password");
         
-        // prepare and execute SQL query
-        q = cdbc_prepare(cdbc, "SELECT * FROM table");
+        // prepare SQL query
+        q = cdbc_prepare(cdbc, "SELECT * FROM table WHERE id = ?");
+        
+        // bind input parameters
+        cdbc_bind_param(q, 1, CDBC_C_LONG, id, sizeof(id));
+        
+        // execute SQL query
         cdbc_execute(q);
         
-        // bind variable to row in resultset
+        // get pointer to row in resultset
         row_value = cdbc_c_name(q, "row_name");
         
         // fetch data
