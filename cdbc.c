@@ -109,7 +109,7 @@ char *_cdbc_get_error(char *errstr, SQLSMALLINT h_type, SQLHANDLE handle) {
 		(rc = SQLGetDiagRec(h_type, handle, i, sqlstate, &native_err, msg, sizeof(msg), &msg_len)) != SQL_NO_DATA)
 	{
 		errstr_len += snprintf(errstr+errstr_len, (SQL_MAX_MESSAGE_LENGTH*2)-errstr_len,
-							  "sqlstate='%.*s' native=%d msg='%.*s'", sizeof(sqlstate), sqlstate,
+							  "sqlstate='%.*s' native=%d msg='%.*s'", (int)sizeof(sqlstate), sqlstate,
 							   native_err, msg_len, msg);
 		i++;
 	}
