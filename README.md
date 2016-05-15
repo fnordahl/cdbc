@@ -11,7 +11,7 @@ CDBC is a C library providing simple and easy to use interfaces to the ODBC API
         CDBC_QUERY q;
         CDBC_RESULT res;
         char *row_value;
-        int id;
+        int id = 1;
         
         // initialize CDBC and connect
         cdbc = cdbc_init();
