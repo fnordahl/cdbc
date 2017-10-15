@@ -1,0 +1,19 @@
+name: cdbc
+version: '0.1'
+summary: C library providing simple and easy to use interfaces to the ODBC API
+description: |
+  CDBC is a C library providing simple and easy to use interfaces to the
+  ODBC API.
+
+grade: devel
+confinement: strict
+
+parts:
+  cdbc:
+    source: https://github.com/fnordahl/cdbc
+    source-type: git
+    source-depth: 1
+    plugin: make
+    stage-packages:
+      - unixodbc
+      - unixodbc-dev
