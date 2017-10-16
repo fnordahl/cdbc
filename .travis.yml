@@ -8,3 +8,5 @@ script:
   - make
   - make test
   - ./test
+  - make test-so
+  - ./test-so
