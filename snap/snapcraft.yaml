@@ -17,3 +17,9 @@ parts:
     stage-packages:
       - unixodbc
       - unixodbc-dev
+
+slots:
+  cdbc:
+    interface: content
+    read:
+    - /
