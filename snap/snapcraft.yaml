@@ -5,6 +5,7 @@ description: |
   CDBC is a C library providing simple and easy to use interfaces to the
   ODBC API.
 
+icon: cdbc.svg
 grade: devel
 confinement: strict
 
