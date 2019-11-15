@@ -1,11 +1,11 @@
 name: cdbc
-version: '0.1'
+version: '0.2.0'
 summary: C library providing simple and easy to use interfaces to the ODBC API
 description: |
   CDBC is a C library providing simple and easy to use interfaces to the
   ODBC API.
-
-grade: devel
+base: core18
+grade: stable
 confinement: strict
 
 parts:
@@ -14,12 +14,17 @@ parts:
     source-type: git
     source-depth: 1
     plugin: make
+    build-packages:
+      - build-essential
     stage-packages:
       - unixodbc
       - unixodbc-dev
+    build-environment:
+      - LIBDIR: /usr/lib/$SNAPCRAFT_ARCH_TRIPLET
 
 slots:
   cdbc:
     interface: content
+    content: libcdbc0-1804
     read:
-    - /
+      - /

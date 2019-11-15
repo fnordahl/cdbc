@@ -22,6 +22,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sysexits.h>
 #include <unistd.h>
 
 #include "cdbc.h"
@@ -31,11 +32,20 @@ int main(int argc, char **argv) {
 	CDBC_QUERY q;
 	CDBC_RESULT res;
 	int count = 0;
-	char *user, *host;
+	char *user, *host, *driver, *username, *password;
+
+	if (argc < 4) {
+		printf("usage: %s driver username password\n", argv[0]);
+		return EX_USAGE;
+	}
+	driver = argv[1];
+	username = argv[2];
+	password = argv[3];
 	
 	cdbc = cdbc_init();
 	
-	if (cdbc_connect(cdbc, "MySQL", "DATABASE=mysql", "127.0.0.1", 3306, "root", ""))
+	if (cdbc_connect(cdbc, driver, "DATABASE=mysql", "127.0.0.1", 3306,
+			 username, password))
 	{
 		printf("connection failed: %s\n", cdbc_error(cdbc));
 		cdbc_cleanup(cdbc);
