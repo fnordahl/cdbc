@@ -1,12 +1,15 @@
 language: C
 install:
-  - sudo apt-get -y install libmyodbc unixodbc-dev
-  - sudo odbcinst -i -d -f /usr/share/libmyodbc/odbcinst.ini
+  - sudo apt-get -y install mysql-server unixodbc-dev
+  - sudo chmod 644 /etc/mysql/debian.cnf
+  - sudo systemctl restart mysql
+  - wget https://downloads.mariadb.com/Connectors/odbc/connector-odbc-3.1.5/mariadb-connector-odbc-3.1.5-ga-debian-x86_64.tar.gz
+  - tar -xvzf mariadb-connector-odbc-3.1.5-ga-debian-x86_64.tar.gz
 env:
   - CFLAGS=-I/usr/include/unixodbc
 script:
   - make
   - make test
-  - ./test
+  - ./test ./lib/libmaodbc.so $(awk '/user/{print$3;exit}' /etc/mysql/debian.cnf) $(awk '/password/{print$3;exit}' /etc/mysql/debian.cnf)
   - make test-so
-  - ./test-so
+  - ./test-so ./lib/libmaodbc.so $(awk '/user/{print$3;exit}' /etc/mysql/debian.cnf) $(awk '/password/{print$3;exit}' /etc/mysql/debian.cnf)
