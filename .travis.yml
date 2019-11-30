@@ -17,7 +17,7 @@ install:
   - sh -c "cd mariadb-odbc/build; cmake -DODBC_LIB_DIR=/usr/lib/$(dpkg-architecture -q DEB_HOST_GNU_TYPE) ..; make"
 script:
   - make
-  - make test
-  - ./test ./mariadb-odbc/build/libmaodbc.so $(awk '/user/{print$3;exit}' /etc/mysql/debian.cnf) $(awk '/password/{print$3;exit}' /etc/mysql/debian.cnf)
-  - make test-so
-  - ./test-so ./mariadb-odbc/build/libmaodbc.so $(awk '/user/{print$3;exit}' /etc/mysql/debian.cnf) $(awk '/password/{print$3;exit}' /etc/mysql/debian.cnf)
+  - make -C tests test
+  - ./tests/test ./mariadb-odbc/build/libmaodbc.so $(awk '/user/{print$3;exit}' /etc/mysql/debian.cnf) $(awk '/password/{print$3;exit}' /etc/mysql/debian.cnf)
+  - make -C tests test-so
+  - ./tests/test-so ./mariadb-odbc/build/libmaodbc.so $(awk '/user/{print$3;exit}' /etc/mysql/debian.cnf) $(awk '/password/{print$3;exit}' /etc/mysql/debian.cnf)
