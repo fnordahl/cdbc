@@ -20,7 +20,7 @@ jobs:
       env: SNAPCRAFT_PROVIDER="host --destructive-mode"
 install:
   - sudo apt-get remove -y --purge lxd lxd-client
-  - sudo snap install lxd
+  - sudo snap install lxd; sudo cat /var/snap/lxd/common/lxd/logs/lxd.log
   - sudo apt-get -y install mysql-server libssl-dev unixodbc-dev
   - sudo chmod 644 /etc/mysql/debian.cnf
   - sudo systemctl restart mysql
