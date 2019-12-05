@@ -1,0 +1,55 @@
+name: cdbc-test
+version: unreleased
+summary: Test program consuming C library from cdbc snap
+description: |
+  CDBC is a C library providing simple and easy to use interfaces to the
+  ODBC API.
+base: core18
+grade: devel
+confinement: strict
+apps:
+  cdbc-test:
+    environment:
+      LD_LIBRARY_PATH: $SNAP/cdbc/usr/lib/$SNAPCRAFT_ARCH_TRIPLET
+    command: usr/bin/cdbc-test
+    plugs:
+      - network
+
+parts:
+  locally-built-cdbc-snap:
+    # Since we are building the cdbc snap under test locally we need to do
+    # some tricks to get it into the snapcraft build environment.
+    #
+    # Normally you would consume cdbc with the `build-snaps` proprety.
+    #
+    # You do however need to have a part that creates the empty directory
+    # to bind mount the cdbc snap contents to in any case.
+    plugin: dump
+    source: cdbc
+    override-build: |
+      sudo snap remove cdbc
+      sudo snap install --dangerous $SNAPCRAFT_PROJECT_DIR/cdbc/cdbc.snap
+    filesets:
+      exclude-snap:
+      - -cdbc/*.snap
+    prime:
+    - $exclude-snap
+    stage:
+    - $exclude-snap
+
+  cdbc-test:
+    after: [locally-built-cdbc-snap]
+    source: .
+    plugin: make
+    build-packages:
+    - gcc
+    build-environment:
+      - CFLAGS: -I/snap/cdbc/current/usr/include
+      - LDFLAGS: /snap/cdbc/current/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libcdbc.a -L/snap/cdbc/current/usr/lib/$SNAPCRAFT_ARCH_TRIPLET
+      - LD_LIBRARY_PATH: /snap/cdbc/current/usr/lib/$SNAPCRAFT_ARCH_TRIPLET
+
+plugs:
+  libcdbc0-1804:
+    interface: content
+    content: libcdbc0-1804
+    target: $SNAP/cdbc

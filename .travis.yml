@@ -1,11 +1,26 @@
 language: C
-arch:
-  - amd64
-  - arm64
-  - ppc64le
-  - s390x
-os: linux
+dist: bionic
+addons:
+  snaps:
+    - name: snapcraft
+      confinement: classic
+      channel: edge
+comment: |
+  Due to snapcraft bug https://bugs.launchpad.net/snapcraft/+bug/1836526
+  we use host provider on non-amd64 architectures.
+  Temporarilly disable ppc64le build due to IBM/Travis infra issue
+  https://travis-ci.org/fnordahl/cdbc/jobs/621096989
+jobs:
+  include:
+    - arch: amd64
+      env: SNAPCRAFT_PROVIDER=lxd
+    - arch: arm64
+      env: SNAPCRAFT_PROVIDER="host --destructive-mode"
+    - arch: s390x
+      env: SNAPCRAFT_PROVIDER="host --destructive-mode"
 install:
+  - sudo apt-get remove -y --purge lxd lxd-client
+  - sudo snap install lxd
   - sudo apt-get -y install mysql-server libssl-dev unixodbc-dev
   - sudo chmod 644 /etc/mysql/debian.cnf
   - sudo systemctl restart mysql
@@ -15,9 +30,13 @@ install:
   - tar -xvzf mariadb-connector-odbc-3.1.5-ga-src.tar.gz --strip-components=1 -C mariadb-odbc
   - tar -xvzf mariadb-connector-c-3.1.5-src.tar.gz --strip-components=1 -C mariadb-odbc/libmariadb
   - sh -c "cd mariadb-odbc/build; cmake -DODBC_LIB_DIR=/usr/lib/$(dpkg-architecture -q DEB_HOST_GNU_TYPE) ..; make"
+  - sudo lxd waitready
+  - sudo lxd init --auto
+  - sudo chmod 666 /var/snap/lxd/common/lxd/unix.socket
 script:
-  - make
-  - make test
-  - ./test ./mariadb-odbc/build/libmaodbc.so $(awk '/user/{print$3;exit}' /etc/mysql/debian.cnf) $(awk '/password/{print$3;exit}' /etc/mysql/debian.cnf)
-  - make test-so
-  - ./test-so ./mariadb-odbc/build/libmaodbc.so $(awk '/user/{print$3;exit}' /etc/mysql/debian.cnf) $(awk '/password/{print$3;exit}' /etc/mysql/debian.cnf)
+  - make test-snap
+  - sudo snap install --dangerous tests/cdbc/cdbc.snap
+  - sudo snap install --dangerous tests/cdbc-test.snap
+  - sudo snap connect cdbc-test:libcdbc0-1804 cdbc
+  - sudo cp mariadb-odbc/build/libmaodbc.so /var/snap/cdbc-test/common/
+  - cdbc-test /var/snap/cdbc-test/common/libmaodbc.so $(awk '/user/{print$3;exit}' /etc/mysql/debian.cnf) $(awk '/password/{print$3;exit}' /etc/mysql/debian.cnf)

@@ -1,25 +1,24 @@
-CFLAGS+=-O2 -g -fpic
-LDFLAGS+=-lodbc
-LIBDIR?=/usr/lib
+TOPTARGETS=all clean install
+SUBDIRS=lib tests
+SNAPCRAFT_PROVIDER?=multipass
+SNAPCRAFT_OUTPUT?=cdbc.snap
 
-all: libcdbc libcdbc.so
+$(TOPTARGETS): $(SUBDIRS)
+$(SUBDIRS):
+	$(MAKE) -C $@ $(MAKECMDGOALS)
 
-libcdbc: cdbc.o
-	$(AR) -r libcdbc.a cdbc.o
+.PHONY: $(TOPTARGETS) $(SUBDIRS)
 
-libcdbc.so: cdbc.o
-	$(CC) -shared -o libcdbc.so.0 cdbc.o
+snap: $(SNAPCRAFT_OUTPUT)
+$(SNAPCRAFT_OUTPUT):
+	snapcraft snap --provider=$(SNAPCRAFT_PROVIDER) -o $(SNAPCRAFT_OUTPUT)
 
-test: libcdbc test.o
-	$(CC) -o test test.o libcdbc.a $(LDFLAGS)
+prepare-test-snap:
+	mkdir -p tests/cdbc
 
-test-so: libcdbc.so test.o
-	$(CC) -o test-so test.o -L. -lcdbc $(LDFLAGS)
-
-clean:
-	rm -f *.o *.a *.core
-
-install:
-	install -c -m 644 cdbc.h $(DESTDIR)/usr/include/cdbc.h
-	install -c -m 644 libcdbc.a $(DESTDIR)$(LIBDIR)/libcdbc.a
-	install -c -m 644 libcdbc.so.0 $(DESTDIR)$(LIBDIR)/libcdbc.so.0
+test-snap: SNAPCRAFT_OUTPUT=tests/cdbc/cdbc.snap
+test-snap: prepare-test-snap snap
+	@if echo $(SNAPCRAFT_PROVIDER) | grep host >/dev/null; then \
+	    sudo rm -rf parts prime stage; \
+	fi
+	$(MAKE) -C tests $@
