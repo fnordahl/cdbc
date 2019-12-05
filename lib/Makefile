@@ -11,7 +11,7 @@ libcdbc.so: cdbc.o
 	$(CC) -shared -o libcdbc.so.0 cdbc.o
 
 clean:
-	rm -f *.o *.a *.core
+	rm -f *.o *.so.* *.a *.core
 
 install:
 	install -c -m 644 cdbc.h $(DESTDIR)/usr/include/cdbc.h

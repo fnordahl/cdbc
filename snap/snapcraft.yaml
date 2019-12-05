@@ -10,7 +10,7 @@ confinement: strict
 
 parts:
   cdbc:
-    source: https://github.com/fnordahl/cdbc
+    source: .
     source-type: git
     source-depth: 1
     plugin: make

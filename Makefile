@@ -1,5 +1,5 @@
 TOPTARGETS=all clean install
-SUBDIRS=lib tests
+SUBDIRS=lib
 SNAPCRAFT_PROVIDER?=multipass
 SNAPCRAFT_OUTPUT?=cdbc.snap
 
