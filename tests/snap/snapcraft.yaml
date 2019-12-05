@@ -53,3 +53,4 @@ plugs:
     interface: content
     content: libcdbc0-1804
     target: $SNAP/cdbc
+    default-provider: cdbc

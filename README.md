@@ -45,4 +45,9 @@ CDBC is a C library providing simple and easy to use interfaces to the ODBC API
         return 0;
     }
     
-Have a look at https://github.com/fnordahl/cdbc/blob/master/test.c for more a more complete example with error handling etc.
+Have a look at [test.c](https://github.com/fnordahl/cdbc/blob/master/tests/test.c)
+for more a more complete example with error handling etc.
+
+The [functional tests](https://github.com/fnordahl/cdbc/blob/master/.travis.yml)
+for this repository contain some hints about consuming the library from your
+[snap](https://github.com/fnordahl/cdbc/blob/master/tests/snap/snapcraft.yaml).
