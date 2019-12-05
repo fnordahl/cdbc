@@ -8,13 +8,13 @@ addons:
 comment: |
   Due to snapcraft bug https://bugs.launchpad.net/snapcraft/+bug/1836526
   we use host provider on non-amd64 architectures.
-  Temporarilly disable ppc64le build due to IBM/Travis infra issue
-  https://travis-ci.org/fnordahl/cdbc/jobs/621096989
 jobs:
   include:
     - arch: amd64
       env: SNAPCRAFT_PROVIDER=lxd
     - arch: arm64
+      env: SNAPCRAFT_PROVIDER="host --destructive-mode"
+    - arch: ppc64le
       env: SNAPCRAFT_PROVIDER="host --destructive-mode"
     - arch: s390x
       env: SNAPCRAFT_PROVIDER="host --destructive-mode"
