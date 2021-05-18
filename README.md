@@ -1,5 +1,4 @@
 ![build status](https://travis-ci.org/fnordahl/cdbc.svg?branch=master "Build status")
-[![Snap Status](https://build.snapcraft.io/badge/fnordahl/cdbc.svg)](https://build.snapcraft.io/user/fnordahl/cdbc)
 # CDBC
 
 CDBC is a C library providing simple and easy to use interfaces to the ODBC API

@@ -14,8 +14,9 @@ jobs:
       env: SNAPCRAFT_PROVIDER=lxd
     - arch: arm64
       env: SNAPCRAFT_PROVIDER="host --destructive-mode"
-    - arch: ppc64le
-      env: SNAPCRAFT_PROVIDER="host --destructive-mode"
+      # temporarilly disable due to failure to initialize job on Travis
+      # - arch: ppc64le
+      #   env: SNAPCRAFT_PROVIDER="host --destructive-mode"
     - arch: s390x
       env: SNAPCRAFT_PROVIDER="host --destructive-mode"
 install:
@@ -24,11 +25,11 @@ install:
   - sudo apt-get -y install mysql-server libssl-dev unixodbc-dev
   - sudo chmod 644 /etc/mysql/debian.cnf
   - sudo systemctl restart mysql
-  - wget https://downloads.mariadb.org/interstitial/connector-c-3.1.5/mariadb-connector-c-3.1.5-src.tar.gz
-  - wget https://downloads.mariadb.org/interstitial/connector-odbc-3.1.5/mariadb-connector-odbc-3.1.5-ga-src.tar.gz
+  - wget https://downloads.mariadb.org/interstitial/connector-c-3.1.13/mariadb-connector-c-3.1.13-src.tar.gz
+  - wget https://downloads.mariadb.org/interstitial/connector-odbc-3.1.11/mariadb-connector-odbc-3.1.11-ga-src.tar.gz
   - mkdir -p mariadb-odbc/libmariadb mariadb-odbc/build
-  - tar -xvzf mariadb-connector-odbc-3.1.5-ga-src.tar.gz --strip-components=1 -C mariadb-odbc
-  - tar -xvzf mariadb-connector-c-3.1.5-src.tar.gz --strip-components=1 -C mariadb-odbc/libmariadb
+  - tar -xvzf mariadb-connector-odbc-3.1.11-ga-src.tar.gz --strip-components=1 -C mariadb-odbc
+  - tar -xvzf mariadb-connector-c-3.1.13-src.tar.gz --strip-components=1 -C mariadb-odbc/libmariadb
   - sh -c "cd mariadb-odbc/build; cmake -DODBC_LIB_DIR=/usr/lib/$(dpkg-architecture -q DEB_HOST_GNU_TYPE) ..; make"
   - sudo lxd waitready
   - sudo lxd init --auto
